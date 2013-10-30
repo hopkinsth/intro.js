@@ -96,7 +96,8 @@
           element: currentElement,
           intro: currentElement.getAttribute('data-intro'),
           step: parseInt(currentElement.getAttribute('data-step'), 10),
-	  tooltipClass: currentElement.getAttribute('data-tooltipClass'),
+	        tooltipClass: currentElement.getAttribute('data-tooltipClass'),
+          allowSkip: !(currentElement.getAttribute('data-allowSkip') === 'false'),
           position: currentElement.getAttribute('data-position') || this._options.tooltipPosition
         });
       }
@@ -300,6 +301,15 @@
       tooltipCssClass = this._options.tooltipClass;
     }
 
+    var allowSkip = (this._introItems[this._currentStep].allowSkip === (void 0)) ? true : this._introItems[this._currentStep].allowSkip;
+    var skipButton = tooltipLayer.querySelector('.introjs-skipbutton');
+
+    if (allowSkip) {
+      skipButton.style.display = 'inline';
+    } else {
+      skipButton.style.display = 'none';
+    }
+
     tooltipLayer.className = ('introjs-tooltip ' + tooltipCssClass).replace(/^\s+|\s+$/g, '');
 
     //custom css class for tooltip boxes
@@ -484,6 +494,7 @@
 
       var tooltipButtonsLayer = tooltipLayer.querySelector('.introjs-tooltipbuttons');
       tooltipButtonsLayer.appendChild(skipTooltipButton);
+      
 
       //in order to prevent displaying next/previous button always
       if (this._introItems.length > 1) {
